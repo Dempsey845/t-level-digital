@@ -1,9 +1,12 @@
-import './App.css'
+import "./App.css";
+import FlashCard from "./components/FlashCard/FlashCard";
 
 function App() {
   return (
-    <h1 className='text-3xl'>Hello world!</h1>
-  )
+    <div>
+      <FlashCard question={"What is 2 + 2"} answer={"4"} />
+    </div>
+  );
 }
 
-export default App
+export default App;

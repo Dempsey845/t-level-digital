@@ -7,8 +7,9 @@ import Navbar from "./components/NavBar/Navbar";
 function App() {
   return (
     <Router>
+      <Navbar />
+
       <main className="px-4 py-6">
-        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/flashcards" element={<FlashCards />} />

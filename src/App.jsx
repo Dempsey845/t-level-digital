@@ -1,21 +1,20 @@
 import "./App.css";
-import FlashCardGame from "./components/FlashCardGame/FlashCardGame";
-
-const CARDS = [
-  { question: "What is 2 + 2?", answer: "4" },
-  { question: "What is 2 + 4?", answer: "6" },
-  { question: "What is 2 + 6?", answer: "8" },
-  { question: "What is 2 + 8?", answer: "10" },
-  { question: "What is 2 + 10?", answer: "12" },
-  { question: "What is 2 + 12?", answer: "14" },
-  { question: "What is 2 + 14?", answer: "16" },
-];
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import FlashCards from "./pages/FlashCards";
+import Navbar from "./components/NavBar/Navbar";
 
 function App() {
   return (
-    <div>
-      <FlashCardGame cards={CARDS} />
-    </div>
+    <Router>
+      <main className="px-4 py-6">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/flashcards" element={<FlashCards />} />
+        </Routes>
+      </main>
+    </Router>
   );
 }
 

@@ -11,6 +11,7 @@ import BusinessContext from "./pages/BusinessContext";
 import Data from "./pages/Data";
 import DigitalEnvironments from "./pages/DigitalEnvironments";
 import Security from "./pages/Security";
+import TopicDetail from "./pages/TopicDetails";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             element={<DigitalEnvironments />}
           />
           <Route path="/areas/security" element={<Security />} />
+          <Route path="/topics/:id" element={<TopicDetail />} />
         </Routes>
       </main>
     </Router>

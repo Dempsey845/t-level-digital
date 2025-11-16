@@ -61,7 +61,7 @@ export default function FlashCardGame({ cards }) {
               onClick={() => {
                 const split = cards[currentCardIndex].outcome_id.split(".");
                 const id = `${split[0]}.${split[1]}`;
-                window.open(`/topics/${id}`, "_blank");
+                window.open(`/topics/${id}?outcome=${split[2]}`, "_blank");
               }}
               className="bg-white hover:bg-gray-200 cursor-pointer shadow-md rounded-xl p-4 w-full"
             >

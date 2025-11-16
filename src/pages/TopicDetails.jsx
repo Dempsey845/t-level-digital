@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import OutcomesList from "../components/OutcomesList/OutcomesList";
 import { getTopicById } from "../utils/contentAreas";
 
 export default function TopicDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [topic, setTopic] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const searchParams = new URLSearchParams(location.search);
+  const selectedOutcome = searchParams.get("outcome");
 
   useEffect(() => {
     setLoading(true);
@@ -16,11 +21,8 @@ export default function TopicDetail() {
     setLoading(false);
   }, [id]);
 
-  if (loading) {
-    return <p className="p-6 text-gray-500">Loading topic...</p>;
-  }
-
-  if (!topic) {
+  if (loading) return <p className="p-6 text-gray-500">Loading topic...</p>;
+  if (!topic)
     return (
       <div className="p-6">
         <button
@@ -32,7 +34,6 @@ export default function TopicDetail() {
         <p className="text-gray-600">Topic not found.</p>
       </div>
     );
-  }
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -47,7 +48,11 @@ export default function TopicDetail() {
         {topic.id} {topic.title}
       </h1>
 
-      <OutcomesList outcomes={topic.outcomes} topicId={topic.id} />
+      <OutcomesList
+        outcomes={topic.outcomes}
+        topicId={topic.id}
+        selectedOutcome={selectedOutcome}
+      />
     </div>
   );
 }

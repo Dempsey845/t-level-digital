@@ -9,36 +9,13 @@ export default function FlashCardGame({ cards }) {
     nextCard,
     visibleCards,
     remainingCards,
+    currentOutcome,
   } = useFlashCardGame(cards);
 
   return (
-    <div className="flex flex-col items-center gap-6 mt-8 px-4 w-full">
-      <div className="flex flex-col md:flex-row-reverse w-full max-w-4xl justify-center items-center md:items-start gap-8">
-        {!deckEnded && (
-          <div className="flex flex-col sm:flex-row md:flex-col gap-4 items-center md:items-start w-full max-w-sm order-1 md:order-none">
-            <div className="flex flex-row sm:flex-col md:flex-col gap-4 w-full justify-center">
-              <button
-                onClick={nextCard}
-                className="flex-1 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-md transition"
-              >
-                Correct
-              </button>
-
-              <button
-                onClick={nextCard}
-                className="flex-1 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-md transition"
-              >
-                Incorrect
-              </button>
-            </div>
-
-            <div className="text-gray-700 text-sm text-center md:text-left mt-2">
-              {remainingCards} card{remainingCards !== 1 ? "s" : ""} left
-            </div>
-          </div>
-        )}
-
-        <div className="relative flex justify-center w-full max-w-sm sm:max-w-md md:max-w-lg h-[320px] sm:h-[380px] order-2 md:order-none">
+    <div className="flex flex-col items-center gap-10 mt-10 px-4 w-full">
+      <div className="flex flex-col lg:flex-row w-full max-w-5xl justify-center items-center lg:items-start gap-12">
+        <div className="relative flex justify-center w-full max-w-sm sm:max-w-md md:max-w-lg h-80 sm:h-[380px] order-2 lg:order-1">
           <AnimatePresence>
             {visibleCards.map((card, idx) => {
               const isTop = idx === 0;
@@ -62,10 +39,52 @@ export default function FlashCardGame({ cards }) {
             })}
           </AnimatePresence>
         </div>
+
+        {!deckEnded && (
+          <div className="flex flex-col items-center lg:items-start gap-6 w-full max-w-xs order-1 lg:order-2 text-center lg:text-left">
+            <div className="flex flex-row lg:flex-col gap-4 w-full">
+              <button
+                onClick={nextCard}
+                className="flex-1 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl shadow transition font-semibold"
+              >
+                Correct
+              </button>
+              <button
+                onClick={nextCard}
+                className="flex-1 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow transition font-semibold"
+              >
+                Incorrect
+              </button>
+            </div>
+
+            <div
+              onClick={() => {
+                const split = cards[currentCardIndex].outcome_id.split(".");
+                const id = `${split[0]}.${split[1]}`;
+                window.open(`/topics/${id}`, "_blank");
+              }}
+              className="bg-white hover:bg-gray-200 cursor-pointer shadow-md rounded-xl p-4 w-full"
+            >
+              <h3 className="font-semibold text-gray-800 mb-1">
+                Outcome ({cards[currentCardIndex].outcome_id})
+              </h3>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                {currentOutcome.length > 70
+                  ? currentOutcome.slice(0, 70) + "..."
+                  : currentOutcome}
+              </p>
+            </div>
+
+            <p className="text-gray-600 font-semibold">
+              <span className="font-bold">{remainingCards}</span> card
+              {remainingCards !== 1 ? "s" : ""} left
+            </p>
+          </div>
+        )}
       </div>
 
       {deckEnded && (
-        <div className="mt-6 text-lg font-semibold text-gray-700 text-center">
+        <div className="mt-6 text-xl font-semibold text-gray-700 text-center">
           🎉 You finished all cards!
         </div>
       )}

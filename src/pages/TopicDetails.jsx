@@ -1,37 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import OutcomesList from "../components/OutcomesList/OutcomesList";
-
-import problemSolving from "../data/problemSolving";
-import programming from "../data/programming";
-import emergingIssues from "../data/emergingIssues";
-import legislation from "../data/legislation";
-import businessContext from "../data/businessContext";
-import dataTopics from "../data/data";
-import digitalEnvironments from "../data/digitalEnvironments";
-import security from "../data/security";
-
-const AREAS = [
-  "problemSolving",
-  "programming",
-  "emergingIssues",
-  "legislation",
-  "businessContext",
-  "data",
-  "digitalEnvironments",
-  "security",
-];
-
-const AREAS_MAP = {
-  problemSolving,
-  programming,
-  emergingIssues,
-  legislation,
-  businessContext,
-  data: dataTopics,
-  digitalEnvironments,
-  security,
-};
+import { getTopicById } from "../utils/contentAreas";
 
 export default function TopicDetail() {
   const { id } = useParams();
@@ -40,26 +10,10 @@ export default function TopicDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadTopic = () => {
-      try {
-        const areaIndex = parseInt(id.split(".")[0], 10) - 1;
-        const areaName = AREAS[areaIndex];
-
-        if (!areaName) throw new Error("Invalid topic ID prefix.");
-
-        const topicsData = AREAS_MAP[areaName];
-
-        const found = topicsData.find((t) => t.id === id);
-        setTopic(found || null);
-      } catch (err) {
-        console.error(err);
-        setTopic(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadTopic();
+    setLoading(true);
+    const result = getTopicById(id);
+    setTopic(result);
+    setLoading(false);
   }, [id]);
 
   if (loading) {

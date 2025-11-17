@@ -2,7 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import FlashCards from "./pages/FlashCards";
-import Navbar from "./components/NavBar/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import ProblemSolving from "./pages/ProblemSolving";
 import Programming from "./pages/Programming";
 import EmergingIssues from "./pages/EmergingIssues";

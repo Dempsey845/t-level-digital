@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import OutcomesList from "../components/OutcomesList/OutcomesList";
-import { getTopicById } from "../utils/contentAreas";
+import { getTopicById } from "../utils/contentAreas"; // async now
 
 export default function TopicDetail() {
   const { id } = useParams();
@@ -15,10 +15,27 @@ export default function TopicDetail() {
   const selectedOutcome = searchParams.get("outcome");
 
   useEffect(() => {
-    setLoading(true);
-    const result = getTopicById(id);
-    setTopic(result);
-    setLoading(false);
+    let cancelled = false;
+
+    async function fetchTopic() {
+      setLoading(true);
+      try {
+        const result = await getTopicById(id);
+        if (!cancelled) {
+          setTopic(result);
+        }
+      } catch (err) {
+        console.error("Error fetching topic:", err);
+        if (!cancelled) setTopic(null);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    fetchTopic();
+    return () => {
+      cancelled = true; // prevent state update if component unmounts
+    };
   }, [id]);
 
   if (loading) return <p className="p-6 text-gray-500">Loading topic...</p>;

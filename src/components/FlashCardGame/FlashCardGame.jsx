@@ -69,9 +69,11 @@ export default function FlashCardGame({ cards }) {
                 Outcome ({cards[currentCardIndex].outcome_id})
               </h3>
               <p className="text-sm text-gray-700 leading-relaxed">
-                {currentOutcome.length > 70
-                  ? currentOutcome.slice(0, 70) + "..."
-                  : currentOutcome}
+                {currentOutcome
+                  ? currentOutcome.text.length > 70
+                    ? currentOutcome.text.slice(0, 70) + "..."
+                    : currentOutcome.text
+                  : "Loading..."}
               </p>
             </div>
 

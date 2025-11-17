@@ -1,11 +1,13 @@
-import problemSolving from "../data/problemSolving";
-import programming from "../data/programming";
-import emergingIssues from "../data/emergingIssues";
-import legislation from "../data/legislation";
-import businessContext from "../data/businessContext";
-import dataTopics from "../data/data";
-import digitalEnvironments from "../data/digitalEnvironments";
-import security from "../data/security";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+} from "firebase/firestore";
+import app from "../lib/firebase";
+
+const db = getFirestore(app);
 
 function toCamelCase(text) {
   return text
@@ -29,44 +31,42 @@ export const AREAS = [
   "security",
 ];
 
-export const AREAS_MAP = {
-  problemSolving,
-  programming,
-  emergingIssues,
-  legislation,
-  businessContext,
-  data: dataTopics,
-  digitalEnvironments,
-  security,
-};
+export async function getTopicById(id) {
+  const area = id.split(".")[0];
+  const ref = doc(db, "areas", area, "topics", id);
+  const snapshot = await getDoc(ref);
 
-export function getTopicById(id) {
-  const areaIndex = parseInt(id.split(".")[0], 10) - 1;
-  const areaName = AREAS[areaIndex];
-  if (!areaName) return null;
-
-  const topicsData = AREAS_MAP[areaName];
-  return topicsData?.find((t) => t.id === id) || null;
+  return snapshot.exists() ? snapshot.data() : null;
 }
 
-export function getTopicAndAreaOfCard(card) {
+export async function getTopicsByAreaName(areaName) {
+  const camelName = toCamelCase(areaName);
+
+  const areaIndex = AREAS.findIndex((area) => area === camelName);
+  if (areaIndex === -1) return null;
+
+  const areaId = (areaIndex + 1).toString();
+  const topicsRef = collection(db, "areas", areaId, "topics");
+  const snapshot = await getDocs(topicsRef);
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+}
+export async function getTopicAndAreaOfCard(card) {
   if (!card?.outcome_id) return null;
 
   const split = card.outcome_id.split(".");
   const topicId = `${split[0]}.${split[1]}`;
+  const outcomeIndex = parseInt(split[2]) - 1;
 
-  const areaIndex = parseInt(card.outcome_id.split(".")[0], 10) - 1;
+  const areaIndex = parseInt(split[0], 10) - 1;
   const areaName = AREAS[areaIndex];
-  if (!areaName) return null;
 
-  const topic = getTopicById(topicId);
-  topic.outcome = topic.outcomes[parseInt(split[2] - 1)];
+  const topic = await getTopicById(topicId);
+  if (!topic) return null;
 
-  return { areaName, topic };
-}
-
-export function getTopicsByAreaName(areaName) {
-  const camelName = toCamelCase(areaName);
-
-  return AREAS_MAP[camelName];
+  const outcome = topic.outcomes[outcomeIndex];
+  return { areaName, topic: { ...topic, outcome } };
 }

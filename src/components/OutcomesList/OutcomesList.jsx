@@ -32,7 +32,7 @@ export default function OutcomesList({ outcomes, topicId, selectedOutcome }) {
   return (
     <ul className="space-y-2 list-inside text-gray-700 leading-relaxed">
       {outcomes.map((outcome, index) => {
-        const outcomeNumber = (index + 1).toString(); // "1", "2", ..., "14"
+        const outcomeNumber = (index + 1).toString();
         const outcomeCode = `${topicId}.${outcomeNumber}`;
         const isSelected =
           selectedOutcome === outcomeNumber || selectedOutcome === outcomeCode;
@@ -51,7 +51,7 @@ export default function OutcomesList({ outcomes, topicId, selectedOutcome }) {
             }`}
           >
             <span className="font-semibold mr-2">{outcomeCode}</span>
-            {outcome}
+            {outcome.text}
           </li>
         );
       })}

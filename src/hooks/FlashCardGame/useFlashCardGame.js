@@ -1,26 +1,34 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getTopicAndAreaOfCard } from "../../utils/contentAreas";
 
 export default function useFlashCardGame(cards) {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [deckEnded, setDeckEnded] = useState(false);
-  const [currentOutcome, setCurrentOutcome] = useState(
-    getTopicAndAreaOfCard(cards[0]).topic.outcome
-  );
+  const [currentOutcome, setCurrentOutcome] = useState(null);
+  const [loadingOutcome, setLoadingOutcome] = useState(true);
+
+  // Load outcome for the current card
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadOutcome() {
+      setLoadingOutcome(true);
+      const result = await getTopicAndAreaOfCard(cards[currentCardIndex]);
+      if (!cancelled) {
+        setCurrentOutcome(result.topic.outcome);
+        setLoadingOutcome(false);
+      }
+    }
+
+    loadOutcome();
+    return () => (cancelled = true);
+  }, [currentCardIndex, cards]);
 
   const nextCard = () => {
     if (currentCardIndex + 1 >= cards.length) {
       setDeckEnded(true);
     } else {
-      setCurrentCardIndex((prev) => {
-        const nextIndex = prev + 1;
-        if (cards[nextIndex].outcome_id != cards[prev].outcome_id) {
-          const topic = getTopicAndAreaOfCard(cards[nextIndex]).topic;
-          setCurrentOutcome(topic.outcome);
-          console.log(topic);
-        }
-        return nextIndex;
-      });
+      setCurrentCardIndex((prev) => prev + 1);
     }
   };
 
@@ -38,5 +46,6 @@ export default function useFlashCardGame(cards) {
     visibleCards,
     remainingCards,
     currentOutcome,
+    loadingOutcome,
   };
 }

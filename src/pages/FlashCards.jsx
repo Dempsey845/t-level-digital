@@ -9,13 +9,23 @@ export default function FlashCards() {
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [selectedOutcomes, setSelectedOutcomes] = useState([]);
+  const [loadingTopics, setLoadingTopics] = useState(false);
 
-  const handleAreaSelect = (area) => {
+  const handleAreaSelect = async (area) => {
     setSelectedArea(area);
-    const t = getTopicsByAreaName(area);
-    setTopics(t);
     setSelectedTopic(null);
     setSelectedOutcomes([]);
+    setLoadingTopics(true);
+
+    try {
+      const t = await getTopicsByAreaName(area);
+      setTopics(t || []);
+    } catch (err) {
+      console.error("Error fetching topics:", err);
+      setTopics([]);
+    }
+
+    setLoadingTopics(false);
   };
 
   const handleTopicSelect = (topicId) => {
@@ -44,6 +54,7 @@ export default function FlashCards() {
     const outcomeIds = topic.outcomes
       .map((_, idx) => `${topic.id}.${idx + 1}`)
       .filter((id, idx) => selectedOutcomes.includes(topic.outcomes[idx]));
+
     navigate(`/flashcards/play?outcomes=${outcomeIds.join(",")}`);
   };
 
@@ -51,7 +62,9 @@ export default function FlashCards() {
     <div>
       <ContentAreas onSelect={handleAreaSelect} mode="select" />
 
-      {topics.length > 0 && (
+      {loadingTopics && <p className="p-6 text-gray-500">Loading topics...</p>}
+
+      {topics.length > 0 && !loadingTopics && (
         <div className="flex flex-col items-center w-full mt-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
             Pick a topic
@@ -85,6 +98,8 @@ export default function FlashCards() {
               .outcomes.map((outcome, idx) => {
                 const topic = topics.find((t) => t.id === selectedTopic);
                 const outcomeId = `${topic.id}.${idx + 1}`;
+                const isSelected = selectedOutcomes.includes(outcome); // still comparing objects
+
                 return (
                   <button
                     key={idx}
@@ -93,7 +108,7 @@ export default function FlashCards() {
   rounded-xl shadow-md transition-transform duration-200 hover:scale-105
   focus:outline-none flex flex-col justify-start text-left p-4 font-medium text-xs leading-tight
   ${
-    selectedOutcomes.includes(outcome)
+    isSelected
       ? "bg-yellow-400 text-white shadow-lg"
       : "bg-gray-100 text-gray-800 hover:bg-gray-200"
   }`}
@@ -102,9 +117,9 @@ export default function FlashCards() {
                       {outcomeId}
                     </span>
                     <span className="mt-6 overflow-hidden">
-                      {outcome.length > 60
-                        ? outcome.slice(0, 60) + "..."
-                        : outcome}
+                      {outcome.text.length > 60
+                        ? outcome.text.slice(0, 60) + "..."
+                        : outcome.text}
                     </span>
                   </button>
                 );

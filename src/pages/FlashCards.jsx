@@ -18,8 +18,17 @@ export default function FlashCards() {
     setLoadingTopics(true);
 
     try {
-      const t = await getTopicsByAreaName(area);
-      setTopics(t || []);
+      let t = await getTopicsByAreaName(area);
+      t = t || [];
+
+      // Sort topics by their numeric ID (natural sort)
+      t.sort((a, b) => {
+        const [aMain, aSub] = a.id.split(".").map(Number);
+        const [bMain, bSub] = b.id.split(".").map(Number);
+        return aMain !== bMain ? aMain - bMain : aSub - bSub;
+      });
+
+      setTopics(t);
     } catch (err) {
       console.error("Error fetching topics:", err);
       setTopics([]);

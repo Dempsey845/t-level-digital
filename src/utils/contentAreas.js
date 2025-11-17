@@ -5,9 +5,7 @@ import {
   collection,
   getDocs,
 } from "firebase/firestore";
-import app from "../lib/firebase";
-
-const db = getFirestore(app);
+import { app, db } from "../lib/firebase";
 
 function toCamelCase(text) {
   return text

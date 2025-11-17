@@ -12,16 +12,19 @@ import Data from "./pages/Data";
 import DigitalEnvironments from "./pages/DigitalEnvironments";
 import Security from "./pages/Security";
 import TopicDetail from "./pages/TopicDetails";
+import FlashCardPlay from "./pages/FlashCardPlay";
+import RevisionComputationalThinking from "./components/Revision/RevisionComputationalThinking";
 
 function App() {
   return (
     <Router>
       <Navbar />
 
-      <main className="px-4 py-6">
+      <main className="px-2 py-6">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/flashcards" element={<FlashCards />} />
+          <Route path="/flashcards/play" element={<FlashCardPlay />} />
           <Route path="/areas/problem-solving" element={<ProblemSolving />} />
           <Route path="/areas/programming" element={<Programming />} />
           <Route path="/areas/emerging-issues" element={<EmergingIssues />} />
@@ -34,6 +37,10 @@ function App() {
           />
           <Route path="/areas/security" element={<Security />} />
           <Route path="/topics/:id" element={<TopicDetail />} />
+          <Route
+            path="/outcomes/1.1"
+            element={<RevisionComputationalThinking />}
+          />
         </Routes>
       </main>
     </Router>

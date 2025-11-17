@@ -7,6 +7,17 @@ import dataTopics from "../data/data";
 import digitalEnvironments from "../data/digitalEnvironments";
 import security from "../data/security";
 
+function toCamelCase(text) {
+  return text
+    .toLowerCase()
+    .split(/[\s_-]+/)
+    .map((word, index) => {
+      if (index === 0) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join("");
+}
+
 export const AREAS = [
   "problemSolving",
   "programming",
@@ -52,4 +63,10 @@ export function getTopicAndAreaOfCard(card) {
   topic.outcome = topic.outcomes[parseInt(split[2] - 1)];
 
   return { areaName, topic };
+}
+
+export function getTopicsByAreaName(areaName) {
+  const camelName = toCamelCase(areaName);
+
+  return AREAS_MAP[camelName];
 }

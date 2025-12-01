@@ -14,6 +14,8 @@ import Security from "./pages/Security";
 import TopicDetail from "./pages/TopicDetails";
 import FlashCardPlay from "./pages/FlashCardPlay";
 import RevisionComputationalThinking from "./components/Revision/RevisionComputationalThinking";
+import RevisionAlgorithmicDesign from "./components/Revision/RevisionAlgorithmicDesign";
+import RevisionStrategies from "./components/Revision/RevisionStrategies";
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
             path="/outcomes/1.1"
             element={<RevisionComputationalThinking />}
           />
+          <Route path="/outcomes/1.2" element={<RevisionAlgorithmicDesign />} />
+          <Route path="/outcomes/1.3" element={<RevisionStrategies />} />
         </Routes>
       </main>
     </Router>

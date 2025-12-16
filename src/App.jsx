@@ -16,6 +16,8 @@ import FlashCardPlay from "./pages/FlashCardPlay";
 import RevisionComputationalThinking from "./components/Revision/RevisionComputationalThinking";
 import RevisionAlgorithmicDesign from "./components/Revision/RevisionAlgorithmicDesign";
 import RevisionStrategies from "./components/Revision/RevisionStrategies";
+import NotFound from "./pages/NotFound";
+import OutcomesNotFound from "./pages/OutcomesNotFound";
 
 function App() {
   return (
@@ -45,6 +47,9 @@ function App() {
           />
           <Route path="/outcomes/1.2" element={<RevisionAlgorithmicDesign />} />
           <Route path="/outcomes/1.3" element={<RevisionStrategies />} />
+
+          <Route path="/outcomes/*" element={<OutcomesNotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </Router>

@@ -18,6 +18,7 @@ import RevisionAlgorithmicDesign from "./components/Revision/RevisionAlgorithmic
 import RevisionStrategies from "./components/Revision/RevisionStrategies";
 import NotFound from "./pages/NotFound";
 import OutcomesNotFound from "./pages/OutcomesNotFound";
+import RevisionPDF from "./pages/RevisionPDF";
 
 function App() {
   return (
@@ -47,6 +48,8 @@ function App() {
           />
           <Route path="/outcomes/1.2" element={<RevisionAlgorithmicDesign />} />
           <Route path="/outcomes/1.3" element={<RevisionStrategies />} />
+          <Route path="/outcomes/5.3" element={<RevisionPDF />} />
+          <Route path="/outcomes/7.4" element={<RevisionPDF />} />
 
           <Route path="/outcomes/*" element={<OutcomesNotFound />} />
           <Route path="*" element={<NotFound />} />
